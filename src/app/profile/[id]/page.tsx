@@ -1,8 +1,12 @@
 export default function userProfile({params} : any) {
     return (
-      <div>
-        <h1 className="text-4xl"> Your Profile {params.id} </h1>
-        <p>Manage your account settings and preferences here.</p>
+      <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
+        <div className="card max-w-md w-full space-y-8">
+          <div>
+            <h1 className="text-center text-3xl font-extrabold">Your Profile {params.id}</h1>
+            <p className="mt-4 text-center text-gray-300">Manage your account settings and preferences here.</p>
+          </div>
+        </div>
       </div>
     );
 }

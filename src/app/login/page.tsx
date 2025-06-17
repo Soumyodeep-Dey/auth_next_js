@@ -1,12 +1,10 @@
 "use client";
 import Link from 'next/link';
-import React, { use } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Axios } from 'axios';
 
-
 export default function SignupPage() {
-
   const [user, setUser] = React.useState({
     email: '',
     password: '',
@@ -17,36 +15,64 @@ export default function SignupPage() {
   };
 
   return (
-    <div>
-      <h1>Log In</h1>
-      <hr />
-      <form>
-        <label htmlFor="email">
-          Email:
-          <input
-            id="email"
-            type="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
-            placeholder="Email"
-            required />
-        </label>
-        <label htmlFor="password">
-          Password:
-          <input
-            id="password"
-            type="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
-            placeholder="Password"
-            required />
-        </label>
-        <hr />
-        <button type="submit" onClick={onLogin}>
-          Log In
-        </button>
-      </form>
-      <Link href="/signup">Don't have an account? Sign up</Link>
+    <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
+      <div className="card max-w-md w-full space-y-8">
+        <div>
+          <h2 className="text-center text-3xl font-extrabold">
+            Log In
+          </h2>
+        </div>
+        <form className="mt-8 space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                placeholder="Enter your email"
+                required
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                placeholder="Enter your password"
+                required
+                className="input-field"
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              onClick={onLogin}
+              className="btn-primary w-full"
+            >
+              Log In
+            </button>
+          </div>
+        </form>
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-400">
+            Don't have an account?{' '}
+            <Link href="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
