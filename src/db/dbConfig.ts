@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const mongoURL = process.env.mongo_url;
-
 export async function connect() {
     try {
         await mongoose.connect(process.env.MONGO_URI!);
@@ -10,7 +8,7 @@ export async function connect() {
             console.log("Connected to MongoDB");
         });
         connection.on("error", (err) => {
-            console.error("MongoDB connection error:", err);
+            console.error("MongoDB connection error:"+ err);
             process.exit();
         });
     } catch (error) {
