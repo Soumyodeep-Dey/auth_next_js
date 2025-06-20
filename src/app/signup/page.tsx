@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import {toast} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -19,19 +19,18 @@ export default function SignupPage() {
   const onSignup = async () => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/users/signup', user);
-      console.log('Signup response:', response.data);
-      toast.success('Signup successful!');
-      router.push('/login');
-    } catch (error:any) {
-      toast.error(error.message || 'An error occurred during signup');
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Signup success", response.data);
+      router.push("/login");
 
-      console.error('Signup error:', error);
-      return;
+    } catch (error: any) {
+      console.log("Signup failed", error.message);
+
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
     if (user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
@@ -46,29 +45,13 @@ export default function SignupPage() {
       <div className="card max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-extrabold">
-            {loading ? 'Processing...Please wait' : 'Signing Up...'}
+            {loading ? "Processing...Please wait" : "Sign Up"}
           </h2>
         </div>
-        <form className="mt-8 space-y-6">
+        <div className="mt-8 space-y-6">
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={user.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
-                placeholder="Enter your email"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-300">
-                Username
-              </label>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-300">Username</label>
               <input
                 id="username"
                 type="text"
@@ -80,9 +63,19 @@ export default function SignupPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                Password
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                placeholder="Enter your email"
+                required
+                className="input-field"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
               <input
                 id="password"
                 type="password"
@@ -94,17 +87,16 @@ export default function SignupPage() {
               />
             </div>
           </div>
-
           <div>
             <button
-              type="submit"
               onClick={onSignup}
               className="btn-primary w-full"
+              disabled={buttonDisabled}
             >
-              {buttonDisabled ? 'NO SignUp' : 'Sign Up'}
+              {buttonDisabled ? "No signup" : "Sign Up"}
             </button>
           </div>
-        </form>
+        </div>
         <div className="text-center mt-4">
           <p className="text-sm text-gray-400">
             Already have an account?{' '}
