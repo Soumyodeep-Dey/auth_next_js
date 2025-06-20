@@ -1,8 +1,9 @@
 "use client";
 import Link from 'next/link';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Axios } from 'axios';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -12,13 +13,28 @@ export default function SignupPage() {
     username: ''
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
+  // Function to handle signup
   const onSignup = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/users/signup', user);
+      console.log('Signup response:', response.data);
+      toast.success('Signup successful!');
+      router.push('/login');
+    } catch (error:any) {
+      toast.error(error.message || 'An error occurred during signup');
 
+      console.error('Signup error:', error);
+      return;
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0 && user.username.length > 0 ) {
+    if (user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
@@ -30,7 +46,7 @@ export default function SignupPage() {
       <div className="card max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-extrabold">
-            Sign Up
+            {loading ? 'Processing...Please wait' : 'Signing Up...'}
           </h2>
         </div>
         <form className="mt-8 space-y-6">
@@ -85,7 +101,7 @@ export default function SignupPage() {
               onClick={onSignup}
               className="btn-primary w-full"
             >
-              {              buttonDisabled ? 'NO SignUp' : 'Sign Up'}
+              {buttonDisabled ? 'NO SignUp' : 'Sign Up'}
             </button>
           </div>
         </form>
