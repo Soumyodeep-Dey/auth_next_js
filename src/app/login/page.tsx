@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+
+
 export default function SignupPage() {
   const router = useRouter();
   const [user, setUser] = React.useState({
@@ -31,7 +33,7 @@ export default function SignupPage() {
   };
 
   useEffect(() => {
-    if(user.email.length > 0 && user.password.length > 0){
+    if (user.email.length > 0 && user.password.length > 0) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
@@ -43,15 +45,13 @@ export default function SignupPage() {
       <div className="card max-w-md w-full space-y-8">
         <div>
           <h2 className="text-center text-3xl font-extrabold">
-            Log In
+            {loading ? "Processing" : "Login"}
           </h2>
         </div>
-        <form className="mt-8 space-y-6">
+        <div className="mt-8 space-y-6">
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                Email
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email</label>
               <input
                 id="email"
                 type="email"
@@ -63,9 +63,7 @@ export default function SignupPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
               <input
                 id="password"
                 type="password"
@@ -77,17 +75,16 @@ export default function SignupPage() {
               />
             </div>
           </div>
-
           <div>
             <button
-              type="submit"
               onClick={onLogin}
               className="btn-primary w-full"
+              disabled={buttonDisabled}
             >
-              Log In
+              {buttonDisabled ? "No login" : "Login"}
             </button>
           </div>
-        </form>
+        </div>
         <div className="text-center mt-4">
           <p className="text-sm text-gray-400">
             Don't have an account?{' '}
