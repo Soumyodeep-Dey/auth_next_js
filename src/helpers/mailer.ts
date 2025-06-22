@@ -3,17 +3,17 @@ import User from "@/models/userModel";
 import bcryptjs from 'bcryptjs';
 
 
-export const sendEmail = async({email, emailType, userId}:any) => {
+export const sendEmail = async ({ email, emailType, userId }: any) => {
     try {
         // create a hased token
         const hashedToken = await bcryptjs.hash(userId.toString(), 10)
 
         if (emailType === "VERIFY") {
-            await User.findByIdAndUpdate(userId, 
-                {verifyToken: hashedToken, verifyTokenExpiry: Date.now() + 3600000})
-        } else if (emailType === "RESET"){
-            await User.findByIdAndUpdate(userId, 
-                {forgotPasswordToken: hashedToken, forgotPasswordTokenExpiry: Date.now() + 3600000})
+            await User.findByIdAndUpdate(userId,
+                { verifyToken: hashedToken, verifyTokenExpiry: Date.now() + 3600000 })
+        } else if (emailType === "RESET") {
+            await User.findByIdAndUpdate(userId,
+                { forgotPasswordToken: hashedToken, forgotPasswordTokenExpiry: Date.now() + 3600000 })
         }
 
         // Looking to send emails in production? Check out our Email API/SMTP product!
@@ -21,8 +21,8 @@ export const sendEmail = async({email, emailType, userId}:any) => {
             host: "sandbox.smtp.mailtrap.io",
             port: 2525,
             auth: {
-                user: process.env.MAIL_TRAP_USER ,
-                pass: process.env.MAIL_TRAP_PASS 
+                user: process.env.MAIL_TRAP_USER,
+                pass: process.env.MAIL_TRAP_PASS
             }
         });
 
@@ -37,10 +37,10 @@ export const sendEmail = async({email, emailType, userId}:any) => {
         }
 
         const mailresponse = await transport.sendMail
-        (mailOptions);
+            (mailOptions);
         return mailresponse;
 
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(error.message);
     }
 }
