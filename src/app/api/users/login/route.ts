@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
             username: user.username,
             email: user.email
         }
-        console.log("TOKEN_SECRET:", process.env.TOKEN_SECRET);
+         
         //create token
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1d"});
-        console.log(token);
+        
         const response = NextResponse.json({
             message: "Login successful",
             success: true,
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
             httpOnly: true, 
             
         })
-        console.log("Set-Cookie header:", response.cookies);
+        
         return response;
 
     } catch (error: any) {
