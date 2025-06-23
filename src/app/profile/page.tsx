@@ -70,7 +70,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex justify-center space-x-4">
-            <button className="btn-primary">Edit Profile</button>
+            <button className="btn-primary">Verify Profile</button>
             <button className="btn-secondary">Change Password</button>
           </div>
           <hr />
