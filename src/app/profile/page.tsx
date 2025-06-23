@@ -2,7 +2,7 @@
 import axios from "axios";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
 export default function ProfilePage() {
@@ -10,6 +10,12 @@ export default function ProfilePage() {
 
   const [data, setData] = React.useState("nothing");
   const [user, setUser] = React.useState<any>(null);
+  const [showChangePassword, setShowChangePassword] = React.useState(false);
+  const [newPassword, setNewPassword] = React.useState("");
+  const [changePasswordMsg, setChangePasswordMsg] = React.useState("");
+  const [changePasswordError, setChangePasswordError] = React.useState("");
+  const [changePasswordLoading, setChangePasswordLoading] = React.useState(false);
+  const [oldPassword, setOldPassword] = React.useState("");
 
   const logout = async () => {
     // Implement your logout logic here
@@ -70,9 +76,62 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex justify-center space-x-4">
-            <button className="btn-primary">Verify Profile</button>
-            <button className="btn-secondary">Change Password</button>
+            {user && user.isVerified ? (
+              <span className="bg-green-600 text-white px-4 py-2 rounded-md font-bold">Verified</span>
+            ) : (
+              <span className="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Not Verified</span>
+            )}
+            <button className="btn-secondary" onClick={() => setShowChangePassword((v) => !v)}>
+              Change Password
+            </button>
           </div>
+          {showChangePassword && (
+            <form
+              className="space-y-4 mt-4"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setChangePasswordMsg("");
+                setChangePasswordError("");
+                setChangePasswordLoading(true);
+                try {
+                  const res = await axios.post("/api/users/changepassword", { oldPassword, newPassword });
+                  setChangePasswordMsg(res.data.message || "Password changed successfully.");
+                  setOldPassword("");
+                  setNewPassword("");
+                } catch (err: any) {
+                  setChangePasswordError(err.response?.data?.error || "Something went wrong.");
+                } finally {
+                  setChangePasswordLoading(false);
+                }
+              }}
+            >
+              <label htmlFor="old-password" className="block text-sm font-medium text-gray-300">Old Password</label>
+              <input
+                id="old-password"
+                type="password"
+                value={oldPassword}
+                onChange={e => setOldPassword(e.target.value)}
+                required
+                className="input-field mt-1"
+                placeholder="Enter old password"
+              />
+              <label htmlFor="new-password" className="block text-sm font-medium text-gray-300">New Password</label>
+              <input
+                id="new-password"
+                type="password"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+                required
+                className="input-field mt-1"
+                placeholder="Enter new password"
+              />
+              <button type="submit" className="btn-primary w-full" disabled={changePasswordLoading || !oldPassword || !newPassword}>
+                {changePasswordLoading ? "Changing..." : "Change Password"}
+              </button>
+              {changePasswordMsg && <div className="bg-green-600 text-white rounded-md p-2 text-center mt-2">{changePasswordMsg}</div>}
+              {changePasswordError && <div className="bg-red-600 text-white rounded-md p-2 text-center mt-2">{changePasswordError}</div>}
+            </form>
+          )}
           <hr />
 
           <button
