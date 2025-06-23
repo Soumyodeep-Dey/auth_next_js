@@ -84,6 +84,9 @@ export default function SignupPage() {
               {buttonDisabled ? "No login" : "Login"}
             </button>
           </div>
+          <div className="text-right mt-2">
+            <Link href="/forgotpassword" className="text-sm text-indigo-400 hover:text-indigo-300">Forgot Password?</Link>
+          </div>
         </div>
         <div className="text-center mt-4">
           <p className="text-sm text-gray-400">
