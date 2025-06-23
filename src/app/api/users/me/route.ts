@@ -7,9 +7,12 @@ connect();
 
 export async function GET(req: NextRequest) {
     try {
-        const authHeader = req.headers.get("authorization");
-        const token = authHeader?.replace("Bearer ", "") || "";
-        const userId = await getDataFromToken(token);
+        // Extract token from cookies
+        const token = req.cookies.get("token")?.value || "";
+        const userId = getDataFromToken(token);
+        if (!userId) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
         const user = await User.findById(userId).select("-password");
 
         return NextResponse.json({
