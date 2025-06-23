@@ -8,14 +8,16 @@ export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
         const { token, oldPassword, password } = reqBody;
-        // Find user with a non-expired forgotPasswordToken
-        const user = await User.findOne({ forgotPasswordTokenExpiry: { $gt: Date.now() } });
-        if (!user) {
-            return NextResponse.json({ error: "Invalid or expired token" }, { status: 400 });
+        // Find all users with a non-expired forgotPasswordToken
+        const users = await User.find({ forgotPasswordTokenExpiry: { $gt: Date.now() }, forgotPasswordToken: { $ne: null } });
+        let user = null;
+        for (const u of users) {
+            if (await bcryptjs.compare(token, u.forgotPasswordToken)) {
+                user = u;
+                break;
+            }
         }
-        // Compare the provided token with the hashed token in the database
-        const isTokenMatch = await bcryptjs.compare(token, user.forgotPasswordToken);
-        if (!isTokenMatch) {
+        if (!user) {
             return NextResponse.json({ error: "Invalid or expired token" }, { status: 400 });
         }
         // Check if old password matches
