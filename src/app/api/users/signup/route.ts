@@ -2,19 +2,23 @@ import {connect} from "@/db/dbConfig";
 import { NextRequest , NextResponse } from "next/server";
 import User from "@/models/userModel";
 import bcryptjs from "bcryptjs";
-
+import { sendEmail } from "@/helpers/mailer";
  
 
 connect();
 
 export async function POST(request: NextRequest) {
     try {
+
         // Parse the request body
         const reqBody = await request.json();
+
         // getting the data from the request body
         const { username, email, password } = reqBody;
         console.log("Received data:", reqBody);
 
+        console.log(reqBody);
+        
         // Validate input
         if (!username || !email || !password) {
             return NextResponse.json({ error: "All fields are required" }, { status: 400 });
@@ -38,6 +42,13 @@ export async function POST(request: NextRequest) {
         });
         const savedUser = await newUser.save();
         console.log("User created:", savedUser);
+
+        // Send verification email
+        await sendEmail({
+            email,
+            emailType: "VERIFY",
+            userId: savedUser._id
+        });
 
         // Respond with success
 
