@@ -20,10 +20,10 @@ export const sendEmail = async ({ email, emailType, userId, token }: any) => {
             host: "sandbox.smtp.mailtrap.io",
             port: 2525,
             auth: {
-                user: process.env.MAIL_TRAP_USER,
-                pass: process.env.MAIL_TRAP_PASS
+                user: process.env.MAIL_TRAP_USER?.toString(),
+                pass: process.env.MAIL_TRAP_PASS?.toString()
             }
-        });
+        } as any);
 
         const linkPath = emailType === "VERIFY" ? "/verifyemail" : "/resetpassword";
         const linkToken = emailType === "VERIFY" ? hashedToken : token;
