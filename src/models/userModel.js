@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: [true , "Password is required"] 
   },
-  isVarified: {
+  isVerified: {
     type: Boolean, 
     default: false  // Default value is false
   },
@@ -24,10 +24,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false  // Default value is false
   },
+
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
+
   verifyToken: String,
   verifyTokenExpiry: Date,
+  
   createdAt: { type: Date, default: Date.now },
 });
 
