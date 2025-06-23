@@ -31,13 +31,9 @@ export default function ResetPasswordPage() {
             const res = await axios.post("/api/users/resetpassword", { token, oldPassword, password });
             setMessage(res.data.message || "Password reset successful.");
             setTimeout(() => router.push("/login"), 2000);
-        } catch (err: unknown) {
-            if (err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'error' in err.response.data) {
-                setError((err.response as any).data.error || "Something went wrong.");
-            } else if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("Something went wrong.");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                // handle error
             }
         } finally {
             setLoading(false);
@@ -82,4 +78,4 @@ export default function ResetPasswordPage() {
             </div>
         </div>
     );
-} 
+}

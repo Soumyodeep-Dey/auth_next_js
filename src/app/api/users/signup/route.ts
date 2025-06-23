@@ -1,9 +1,9 @@
-import {connect} from "@/db/dbConfig";
-import { NextRequest , NextResponse } from "next/server";
+import { connect } from "@/db/dbConfig";
+import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
 import bcryptjs from "bcryptjs";
 import { sendEmail } from "@/helpers/mailer";
- 
+
 
 connect();
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         console.log("Received data:", reqBody);
 
         console.log(reqBody);
-        
+
         // Validate input
         if (!username || !email || !password) {
             return NextResponse.json({ error: "All fields are required" }, { status: 400 });
@@ -53,15 +53,18 @@ export async function POST(request: NextRequest) {
 
         // Respond with success
 
-        return NextResponse.json({ 
+        return NextResponse.json({
             message: "User created successfully",
-            success : true,
+            success: true,
             status: 201,
             savedUser
         });
 
-        
-    } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+
+    } catch (error : unknown) {
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+        }
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });  
     }
 }

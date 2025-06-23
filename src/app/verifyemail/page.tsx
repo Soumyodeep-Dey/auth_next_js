@@ -14,8 +14,18 @@ export default function VerifyEmailPage() {
             await axios.post('/api/users/verifyemail', { token })
             setVerified(true);
         } catch (err: unknown) {
-            if (err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'error' in err.response.data) {
-                setError((err.response as any).data.error || "Something went wrong.");
+            if (
+                err &&
+                typeof err === 'object' &&
+                'response' in err &&
+                err.response &&
+                typeof err.response === 'object' &&
+                'data' in err.response &&
+                err.response.data &&
+                typeof err.response.data === 'object' &&
+                'error' in err.response.data
+            ) {
+                setError((err.response as { data?: { error?: string } }).data?.error || "Something went wrong.");
             } else if (err instanceof Error) {
                 setError(err.message);
             } else {
@@ -33,6 +43,7 @@ export default function VerifyEmailPage() {
         if (token.length > 0) {
             verifyUserEmail();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     return (
@@ -54,7 +65,7 @@ export default function VerifyEmailPage() {
                     <div className="bg-green-600 text-white rounded-md p-4 text-center">
                         <h2 className="text-2xl font-bold mb-2">Email Verified</h2>
                         <Link href="/login" className="btn-primary inline-block mt-2">
-                        Login
+                            Login
                         </Link>
                     </div>
                 )}

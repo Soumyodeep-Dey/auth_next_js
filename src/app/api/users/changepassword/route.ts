@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
 import bcryptjs from "bcryptjs";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import getDataFromToken from "@/helpers/getDataFromToken";
 import { sendEmail } from "@/helpers/mailer";
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,8 @@ export async function POST(request: NextRequest) {
         const reqBody = await request.json();
         const { oldPassword, newPassword } = reqBody;
         // Get user ID from JWT in cookies
-        const userId = getDataFromToken(request);
+        const token = request.cookies.get('token')?.value || '';
+        const userId = getDataFromToken(token);
         const user = await User.findById(userId);
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });

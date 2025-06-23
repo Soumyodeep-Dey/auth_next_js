@@ -23,11 +23,9 @@ export default function SignupPage() {
       console.log("Signup success", response.data);
       router.push("/login");
 
-    } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'error' in err.response.data) {
-        setError((err.response as any).data.error || "Something went wrong.");
-      } else if (err instanceof Error) {
-        setError(err.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
       } else {
         setError("Something went wrong.");
       }
@@ -53,6 +51,12 @@ export default function SignupPage() {
           </h2>
         </div>
         <div className="mt-8 space-y-6">
+          {/* Show error message if exists */}
+          {error && (
+            <div className="bg-red-600 text-white rounded-md p-2 text-center mb-2">
+              {error}
+            </div>
+          )}
           <div className="space-y-4">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-300">Username</label>

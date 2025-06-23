@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const logout = async () => {
     // Implement your logout logic here
     try {
-      const response = await axios.get("/api/users/logout");
+      await axios.get("/api/users/logout");
       toast.success("Logout successful");
       router.push("/login");
     } catch (error: unknown) {
@@ -166,4 +166,3 @@ export default function ProfilePage() {
     </div>
   );
 }
- 

@@ -1,17 +1,16 @@
-import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
-export const getDataFromToken = (req: NextRequest) => {
+interface DecodedToken {
+  id: string;
+  // add other properties if needed
+}
 
-    try {
-        const token = req.cookies.get("token")?.value || "";
-        const decodedToken:any = jwt.verify(token, process.env.TOKEN_SECRET!);
-        return decodedToken.id;
-    } catch (error: unknown) {
-        let message = 'An unknown error occurred';
-        if (error instanceof Error) {
-            message = error.message;
-        }
-        throw new Error(message);
-    }
-};
+export default function getDataFromToken(token: string): string | null {
+  try {
+    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!) as DecodedToken;
+    return decodedToken.id;
+  } catch {
+    // Optionally log or handle the error
+    return null;
+  }
+}

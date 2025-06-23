@@ -16,11 +16,9 @@ export default function ForgotPasswordPage() {
         try {
             const res = await axios.post("/api/users/forgotpassword", { email });
             setMessage(res.data.message || "Check your email for reset instructions.");
-        } catch (err: unknown) {
-            if (err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'error' in err.response.data) {
-                setError((err.response as any).data.error || "Something went wrong.");
-            } else if (err instanceof Error) {
-                setError(err.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message);
             } else {
                 setError("Something went wrong.");
             }
@@ -55,4 +53,4 @@ export default function ForgotPasswordPage() {
             </div>
         </div>
     );
-} 
+}
