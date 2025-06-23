@@ -16,9 +16,13 @@ export async function GET() {
                 expires: new Date(0) 
             });
         return response;    
-    } catch (error: any) {
+    } catch (error: unknown) {
+        let message = 'An unknown error occurred';
+        if (error instanceof Error) {
+            message = error.message;
+        }
         return NextResponse.json(
-            {error: error.message} , 
+            {error: message} , 
             {status: 500}
         );
     }

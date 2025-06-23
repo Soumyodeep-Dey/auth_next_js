@@ -47,7 +47,8 @@ export async function POST(request: NextRequest) {
         await sendEmail({
             email,
             emailType: "VERIFY",
-            userId: savedUser._id
+            userId: savedUser._id,
+            token: savedUser._id.toString()
         });
 
         // Respond with success

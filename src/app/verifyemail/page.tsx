@@ -7,15 +7,20 @@ import React, { useEffect, useState } from "react";
 export default function VerifyEmailPage() {
     const [token, setToken] = useState("");
     const [verified, setVerified] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<string | false>(false);
 
     const verifyUserEmail = async () => {
         try {
             await axios.post('/api/users/verifyemail', { token })
             setVerified(true);
-        } catch (error: any) {
-            setError(true);
-            console.log(error.response?.data);
+        } catch (err: unknown) {
+            if (err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'error' in err.response.data) {
+                setError((err.response as any).data.error || "Something went wrong.");
+            } else if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Something went wrong.");
+            }
         }
     }
 
@@ -56,7 +61,7 @@ export default function VerifyEmailPage() {
                 {error && (
                     <div className="bg-red-600 text-white rounded-md p-4 text-center">
                         <h2 className="text-2xl font-bold">Verification Error</h2>
-                        <p className="mt-2">There was a problem verifying your email. Please try again or contact support.</p>
+                        <p className="mt-2">{error}</p>
                     </div>
                 )}
             </div>

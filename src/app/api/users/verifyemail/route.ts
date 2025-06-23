@@ -1,9 +1,6 @@
 import { connect } from "@/db/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
-import { sendEmail } from "@/helpers/mailer";
-import bcryptjs from "bcryptjs";
-import crypto from "crypto";
 
 connect()
 
@@ -32,8 +29,12 @@ export async function POST(request: NextRequest) {
         })
 
 
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+    } catch (error: unknown) {
+        let message = 'An unknown error occurred';
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 
 }

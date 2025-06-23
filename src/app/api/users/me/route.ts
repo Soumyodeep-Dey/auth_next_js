@@ -16,7 +16,11 @@ export async function GET(req: NextRequest) {
             status: 200
         });
 
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        let message = 'An unknown error occurred';
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        return NextResponse.json({ message: message }, { status: 500 });
     }
 };

@@ -1,5 +1,12 @@
 "use client";
-export default function userProfile({params} : any) {
+
+// Update PageProps type to match Next.js conventions
+export interface PageProps {
+  params?: Record<string, string>;
+  searchParams?: Record<string, string>;
+}
+
+export default function userProfile({ params }: { params: Record<string, string> }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
         <div className="card max-w-md w-full space-y-8">

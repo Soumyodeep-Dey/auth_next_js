@@ -2,14 +2,28 @@
 import axios from "axios";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+// Define User interface based on userModel.js
+interface User {
+  _id?: string;
+  username: string;
+  email: string;
+  password?: string;
+  isVerified?: boolean;
+  isAdmin?: boolean;
+  forgotPasswordToken?: string;
+  forgotPasswordTokenExpiry?: string | Date;
+  verifyToken?: string;
+  verifyTokenExpiry?: string | Date;
+  createdAt?: string | Date;
+}
 
 export default function ProfilePage() {
   const router = useRouter();
 
-  const [data, setData] = React.useState("nothing");
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = React.useState<User | null>(null);
   const [showChangePassword, setShowChangePassword] = React.useState(false);
   const [newPassword, setNewPassword] = React.useState("");
   const [changePasswordMsg, setChangePasswordMsg] = React.useState("");
@@ -23,9 +37,9 @@ export default function ProfilePage() {
       const response = await axios.get("/api/users/logout");
       toast.success("Logout successful");
       router.push("/login");
-    } catch (error: any) {
-      console.error("Logout failed:", error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      console.error("Logout failed:", error instanceof Error ? error.message : "An unknown error occurred");
+      toast.error(error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 
@@ -35,9 +49,9 @@ export default function ProfilePage() {
       console.log("User data:", response.data);
       setUser(response.data.user); // Save the user object
       toast.success("User details fetched successfully");
-    } catch (error: any) {
-      console.error("Failed to fetch user details:", error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      console.error("Failed to fetch user details:", error instanceof Error ? error.message : "An unknown error occurred");
+      toast.error(error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
   return (
@@ -98,8 +112,8 @@ export default function ProfilePage() {
                   setChangePasswordMsg(res.data.message || "Password changed successfully.");
                   setOldPassword("");
                   setNewPassword("");
-                } catch (err: any) {
-                  setChangePasswordError(err.response?.data?.error || "Something went wrong.");
+                } catch (err: unknown) {
+                  setChangePasswordError(err instanceof Error ? err.message : "Something went wrong.");
                 } finally {
                   setChangePasswordLoading(false);
                 }

@@ -16,6 +16,7 @@ export default function SignupPage() {
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
 
   const onLogin = async () => {
     try {
@@ -24,9 +25,14 @@ export default function SignupPage() {
       console.log("Login successful", response.data);
       toast.success("Login successful");
       router.push('/profile');
-    } catch (error: any) {
-      console.log("Login failed", error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data) {
+        setError((error.response as any).data.error || "Something went wrong.");
+      } else if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Something went wrong.");
+      }
     } finally {
       setLoading(false);
     }

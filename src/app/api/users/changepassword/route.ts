@@ -27,10 +27,15 @@ export async function POST(request: NextRequest) {
         await sendEmail({
             email: user.email,
             emailType: "PASSWORD_CHANGED",
-            userId: user._id
+            userId: user._id,
+            token: ""
         });
         return NextResponse.json({ message: "Password changed successfully", success: true });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        let message = 'An unknown error occurred';
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 } 
